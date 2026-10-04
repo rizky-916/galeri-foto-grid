@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+        Keamanan:
+        - Hanya mengizinkan skrip, gaya, dan gambar dari situs ini sendiri ('self').
+        - Tidak ada skrip/gaya inline, tidak ada plugin, tidak ada form.
+        - Header seperti frame-ancestors / X-Frame-Options tidak berlaku lewat <meta>;
+          atur di server/hosting bila tersedia (lihat README).
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+    <meta name="referrer" content="no-referrer">
+
+    <title>Galeri Foto Grid</title>
+    <meta name="description" content="Galeri foto grid responsif dan ringan, dengan lightbox, tanpa library eksternal.">
+    <meta name="theme-color" content="#0A0F0D">
+    <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Data galeri dulu, lalu logika. "defer" menjaga urutan dan tidak memblokir render. -->
+    <script src="assets/js/gallery-data.js" defer></script>
+    <script src="assets/js/gallery.js" defer></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#galeri">Lewati ke galeri</a>
+
+    <header class="site-header">
+        <h1 id="gallery-title">Galeri Foto</h1>
+        <p id="gallery-subtitle">Koleksi foto pilihan</p>
+    </header>
+
+    <main id="galeri" tabindex="-1">
+        <noscript>
+            <p class="notice">JavaScript diperlukan untuk menampilkan galeri ini.</p>
+        </noscript>
+        <p id="gallery-empty" class="notice" hidden>Belum ada foto. Tambahkan foto di <code>assets/js/gallery-data.js</code>.</p>
+        <ul id="gallery-grid" class="gallery-grid" aria-labelledby="gallery-title"></ul>
+    </main>
+
+    <footer class="site-footer">
+        <p id="gallery-footer">&copy; Galeri Foto</p>
+    </footer>
+
+    <!-- Lightbox: <dialog> bawaan browser menangani fokus dan tombol Esc. -->
+    <dialog id="lightbox" class="lightbox" aria-labelledby="lightbox-caption">
+        <figure class="lightbox-figure">
+            <img id="lightbox-img" class="lightbox-img" alt="">
+            <figcaption id="lightbox-caption" class="lightbox-caption"></figcaption>
+        </figure>
+        <p id="lightbox-counter" class="lightbox-counter" aria-live="polite"></p>
+        <button type="button" class="lightbox-btn lightbox-close" data-action="close" aria-label="Tutup">&times;</button>
+        <button type="button" class="lightbox-btn lightbox-prev" data-action="prev" aria-label="Foto sebelumnya">&#8249;</button>
+        <button type="button" class="lightbox-btn lightbox-next" data-action="next" aria-label="Foto berikutnya">&#8250;</button>
+    </dialog>
+
+</body>
+</html>

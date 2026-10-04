@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Foto asli (belum dibersihkan dari EXIF/GPS) — jangan di-commit
+# Original photos (may contain EXIF/GPS) — never commit
+originals/
+raw/
+
+# Rahasia / Secrets
+.env
+*.pem
+*.key

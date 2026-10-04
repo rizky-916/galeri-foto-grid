@@ -1,0 +1,344 @@
+/* ============================================================
+   Galeri Foto Grid — tema gelap aksen hijau neon
+   Ubah warna cukup di blok :root.
+   ============================================================ */
+:root {
+    --bg-color: #0A0F0D;          /* latar sangat gelap */
+    --text-color: #EAEAEA;        /* teks utama */
+    --muted-color: #A0A0A0;       /* teks sekunder (kontras 7.4:1) */
+    --subtle-color: #8F8F8F;      /* teks footer (kontras 5.9:1, lolos WCAG AA) */
+    --primary-color: #39FF14;     /* hijau neon */
+    --card-bg: #151A18;
+    --border-color: #2A302D;
+    --glow-shadow: 0 0 15px rgba(57, 255, 20, 0.45);
+    --hover-shadow: 0 8px 25px rgba(57, 255, 20, 0.18);
+    --radius: 12px;
+    --font-stack: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    color-scheme: dark;
+}
+
+body {
+    font-family: var(--font-stack);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Kunci scroll halaman saat lightbox terbuka */
+body:has(dialog[open]) {
+    overflow: hidden;
+}
+
+main {
+    flex: 1;
+    width: 100%;
+}
+
+main:focus {
+    outline: none;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--primary-color);
+}
+
+/* Fokus keyboard yang jelas */
+:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* --- Tautan lewati (aksesibilitas) --- */
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -100px;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: #000;
+    font-weight: 700;
+    border-radius: 6px;
+    z-index: 10;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+/* --- Header & Footer --- */
+.site-header,
+.site-footer {
+    text-align: center;
+    padding: 2.5rem 1rem;
+}
+
+.site-header h1 {
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    line-height: 1.2;
+    color: var(--primary-color);
+    text-shadow: var(--glow-shadow);
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+}
+
+.site-header p {
+    font-size: 1.1rem;
+    color: var(--muted-color);
+}
+
+.site-footer {
+    margin-top: 3rem;
+    color: var(--subtle-color);
+    font-size: 0.95rem;
+}
+
+.notice {
+    text-align: center;
+    color: var(--muted-color);
+    padding: 2rem 1rem;
+}
+
+/* --- Grid Galeri --- */
+.gallery-grid {
+    list-style: none;
+    display: grid;
+    /* min(...) mencegah overflow di layar sangat sempit */
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    gap: 1.5rem;
+    padding: 0 clamp(1rem, 5vw, 4rem);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;              /* semua kartu seragam */
+    overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    cursor: zoom-in;
+    font: inherit;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.no-lightbox .gallery-item {
+    cursor: default;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.gallery-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.5rem 1rem 0.75rem;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Gambar gagal dimuat */
+.gallery-item.is-broken img {
+    visibility: hidden;
+}
+
+.gallery-item.is-broken::before {
+    content: "Gambar tidak ditemukan";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--muted-color);
+    font-size: 0.9rem;
+}
+
+/* Efek hover hanya untuk perangkat yang benar-benar punya hover (bukan layar sentuh) */
+@media (hover: hover) and (pointer: fine) {
+    .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--primary-color);
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+}
+
+.gallery-item:focus-visible {
+    border-color: var(--primary-color);
+    box-shadow: var(--hover-shadow);
+}
+
+/* --- Lightbox --- */
+.lightbox {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: rgba(5, 8, 7, 0.94);
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+.lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: lightbox-in 0.2s ease;
+}
+
+.lightbox-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+    padding: 4rem 4.5rem 3.5rem;
+}
+
+.lightbox-img {
+    max-width: 100%;
+    max-height: calc(100% - 3rem);
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(57, 255, 20, 0.12);
+}
+
+.lightbox-caption {
+    text-align: center;
+    color: var(--text-color);
+    max-width: 60ch;
+}
+
+.lightbox-counter {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    color: var(--muted-color);
+    font-size: 0.9rem;
+}
+
+.lightbox-btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: rgba(21, 26, 24, 0.85);
+    color: var(--text-color);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.lightbox-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.lightbox-close {
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.lightbox-prev,
+.lightbox-next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lightbox-prev { left: 0.75rem; }
+.lightbox-next { right: 0.75rem; }
+
+.lightbox.is-single .lightbox-prev,
+.lightbox.is-single .lightbox-next,
+.lightbox.is-single .lightbox-counter {
+    display: none;
+}
+
+@keyframes lightbox-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* --- Responsif --- */
+@media (max-width: 768px) {
+    .gallery-grid {
+        gap: 1rem;
+    }
+
+    .lightbox-figure {
+        padding: 4rem 0.75rem 5.5rem;
+    }
+
+    /* Di HP tombol navigasi pindah ke bawah agar tidak menutupi foto */
+    .lightbox-prev,
+    .lightbox-next {
+        top: auto;
+        bottom: 1rem;
+        transform: none;
+    }
+
+    .lightbox-prev { left: calc(50% - 3.75rem); }
+    .lightbox-next { right: calc(50% - 3.75rem); }
+}
+
+/* --- Hormati preferensi kurangi animasi --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .gallery-item:hover,
+    .gallery-item:hover img {
+        transform: none !important;
+    }
+}
